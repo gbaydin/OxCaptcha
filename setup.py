@@ -30,7 +30,7 @@ setup(
     author='Atilim Gunes Baydin',
     author_email='gunes@robots.ox.ac.uk',
     packages=find_packages(),
-    install_requires=['Pillow>=8.2.0', 'h5py>=2.10.0', 'numpy'],
+    install_requires=['Pillow>=8.2.0', 'h5py>=2.10.0', 'numpy', 'torch', 'torchvision'],
     url='https://github.com/gbaydin/OxCaptcha',
     classifiers=['License :: OSI Approved :: BSD License', 'Programming Language :: Python :: 3'],
     license='BSD',
