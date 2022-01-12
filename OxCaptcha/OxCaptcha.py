@@ -121,19 +121,19 @@ class OxCaptcha():
         for i in range(self._width):
             dy = distortion_shear_y(x_phase, x_period, x_amplitude, i)
             strip = self._image.crop((i, 0, i+1, self._height))
-            self._image.paste(strip, (i-1, dy))
+            self._image.paste(strip, (i, dy))
             if dy >= 0:
                 self._draw.line((i, 0, i, dy), fill=self._background_color)
             else:
                 self._draw.line((i, self._height + dy, i, self._height), fill=self._background_color)
         for i in range(self._height):
             dx = distortion_shear_x(y_phase, y_period, y_amplitude, i)
-            strip = self._image.crop((0, i, 0+self._width, i+1))
-            self._image.paste(strip, (0+dx, i-1))
+            strip = self._image.crop((0, i, self._width, i+1))
+            self._image.paste(strip, (dx, i))
             if dx >= 0:
                 self._draw.line((0, i, dx, i), fill=self._background_color)
             else:
-                self._draw.line((self._width+dx, i, self._width, i))
+                self._draw.line((self._width+dx, i, self._width, i), fill=self._background_color)
 
     # From https://easysavecode.com/5jIZDikh
     def draw_bezier(self, xys, width, color):
@@ -176,6 +176,15 @@ class OxCaptcha():
     def noise_white_gaussian(self, sigma):
         s = np.asarray(self._image) + np.random.normal(0, sigma, (self._height, self._width))
         # self._image.putdata(s)
+        for y in range(self._height):
+            for x in range(self._width):
+                p = s[y, x]
+                p = pixel_int(p)
+                self._image.putpixel((x, y), p)
+
+    def gaussian_blur(self, kernel_size, sigma):
+        s = np.asarray(self._image).copy()
+        s = gaussian(s, kernel_size, sigma)
         for y in range(self._height):
             for x in range(self._width):
                 p = s[y, x]
